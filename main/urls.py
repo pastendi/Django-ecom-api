@@ -7,6 +7,8 @@ from main.product import views
 
 router = DefaultRouter()
 router.register(r"category", views.CategoryViewSet)
+router.register(r"brand", views.BrandViewSet)
+router.register(r"product", views.ProductViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router.urls)),
