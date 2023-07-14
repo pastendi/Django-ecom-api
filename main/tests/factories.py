@@ -26,3 +26,4 @@ class ProductFactory(factory.django.DjangoModelFactory):
     is_downloadable = False
     brand = factory.SubFactory(BrandFactory)
     category = factory.SubFactory(CategoryFactory)
+    visibility = False

@@ -26,6 +26,7 @@ class Product(models.Model):
     is_downloadable = models.BooleanField(default=False)
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     category = models.ForeignKey("Category", null=True, blank=True, on_delete=models.SET_NULL)
+    visibility = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
