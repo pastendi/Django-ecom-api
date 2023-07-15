@@ -31,7 +31,7 @@ class BrandViewSet(viewsets.ViewSet):
 
 
 class ProductViewSet(viewsets.ViewSet):
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().show_only_active()
     lookup_field = "slug"
 
     def retrieve(self, request, slug=None):

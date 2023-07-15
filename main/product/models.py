@@ -1,5 +1,11 @@
 from django.db import models
+from django.db.models.query import QuerySet
 from mptt.models import MPTTModel, TreeForeignKey
+
+
+class ActiveQuerySet(models.QuerySet):
+    def show_only_active(self):
+        return self.filter(visibility=True)
 
 
 class Category(MPTTModel):
@@ -29,12 +35,14 @@ class Product(models.Model):
     category = models.ForeignKey("Category", null=True, blank=True, on_delete=models.SET_NULL)
     visibility = models.BooleanField(default=False)
 
+    objects = ActiveQuerySet.as_manager()
+
     def __str__(self):
         return self.name
 
 
 class ProductLine(models.Model):
-    price = models.DecimalField(decimal_places=2, max_digits=5)
+    price = models.DecimalField(decimal_places=2, max_digits=10)
     sku = models.CharField(max_length=100)
     stock = models.IntegerField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="product_line")
