@@ -1,6 +1,6 @@
 import factory
 
-from main.product.models import Brand, Category, Product
+from main.product.models import Brand, Category, Product, ProductLine
 
 
 class CategoryFactory(factory.django.DjangoModelFactory):
@@ -26,4 +26,15 @@ class ProductFactory(factory.django.DjangoModelFactory):
     is_downloadable = False
     brand = factory.SubFactory(BrandFactory)
     category = factory.SubFactory(CategoryFactory)
-    visibility = False
+    visibility = True
+
+
+class ProductLineFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ProductLine
+
+    price = 10.00
+    sku = "123"
+    stock = 10
+    product = factory.SubFactory(ProductFactory)
+    visibility = True
