@@ -3,6 +3,24 @@ info:
   title: Django DFR Ecommerce
   version: 0.0.0
 paths:
+  /api/brand/:
+    get:
+      operationId: api_brand_list
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Brand'
+          description: ''
   /api/category/:
     get:
       operationId: api_category_list
@@ -21,6 +39,62 @@ paths:
                 items:
                   $ref: '#/components/schemas/Category'
           description: ''
+  /api/product/:
+    get:
+      operationId: api_product_list
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+          description: ''
+  /api/product/{slug}/:
+    get:
+      operationId: api_product_retrieve
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/product/category/{slug}/:
+    get:
+      operationId: api_product_category_retrieve
+      description: An endpoint to return products by category
+      parameters:
+      - in: path
+        name: slug
+        schema:
+          type: string
+          pattern: ^[\w-]+$
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/schema/:
     get:
       operationId: api_schema_retrieve
@@ -168,6 +242,18 @@ paths:
           description: ''
 components:
   schemas:
+    Brand:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 100
+      required:
+      - id
+      - name
     Category:
       type: object
       properties:
@@ -177,28 +263,70 @@ components:
         name:
           type: string
           maxLength: 100
-        lft:
-          type: integer
-          readOnly: true
-        rght:
-          type: integer
-          readOnly: true
-        tree_id:
-          type: integer
-          readOnly: true
-        level:
-          type: integer
-          readOnly: true
-        parent:
-          type: integer
-          nullable: true
       required:
       - id
-      - level
-      - lft
       - name
-      - rght
-      - tree_id
+    Product:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        slug:
+          type: string
+          maxLength: 255
+          pattern: ^[-a-zA-Z0-9_]+$
+        description:
+          type: string
+        brand_name:
+          type: string
+        category_name:
+          type: string
+        product_line:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductLine'
+      required:
+      - brand_name
+      - category_name
+      - name
+      - product_line
+      - slug
+    ProductImage:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+        order:
+          type: integer
+        product_line:
+          type: integer
+      required:
+      - product_line
+    ProductLine:
+      type: object
+      properties:
+        price:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,8}(?:\.\d{0,2})?$
+        sku:
+          type: string
+          maxLength: 100
+        stock:
+          type: integer
+        order:
+          type: integer
+        product_image:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductImage'
+      required:
+      - price
+      - product_image
+      - sku
+      - stock
   securitySchemes:
     basicAuth:
       type: http

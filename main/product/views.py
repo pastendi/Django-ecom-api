@@ -39,6 +39,7 @@ class ProductViewSet(viewsets.ViewSet):
             self.queryset.filter(slug=slug).select_related("category", "brand"), many=True
         )
         data = Response(serializer.data)
+
         # inspect number of dababaset query
         # q = list(connection.queries)
         # print(len(q))
