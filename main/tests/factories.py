@@ -1,6 +1,6 @@
 import factory
 
-from main.product.models import Brand, Category, Product, ProductLine
+from main.product.models import Brand, Category, Product, ProductImage, ProductLine
 
 
 class CategoryFactory(factory.django.DjangoModelFactory):
@@ -38,3 +38,11 @@ class ProductLineFactory(factory.django.DjangoModelFactory):
     stock = 10
     product = factory.SubFactory(ProductFactory)
     visibility = True
+
+
+class ProductImageFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ProductImage
+
+    url = "test.jpg"
+    product_line = factory.SubFactory(ProductLineFactory)
