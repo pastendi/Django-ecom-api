@@ -45,11 +45,11 @@ class ProductViewSet(viewsets.ViewSet):
         data = Response(serializer.data)
 
         # inspect number of dababaset query
-        # q = list(connection.queries)
-        # print(len(q))
-        # for item in q:
-        #     sql = format(str(item["sql"]), reindent=True)
-        #     print(highlight(sql, SqlLexer(), TerminalFormatter()))
+        q = list(connection.queries)
+        print(len(q))
+        for item in q:
+            sql = format(str(item["sql"]), reindent=True)
+            print(highlight(sql, SqlLexer(), TerminalFormatter()))
         return data
 
     @extend_schema(responses=ProductSerializer)
