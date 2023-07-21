@@ -38,7 +38,7 @@ class Product(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     category = models.ForeignKey("Category", null=True, blank=True, on_delete=models.SET_NULL)
     visibility = models.BooleanField(default=False)
-
+    product_type = models.ForeignKey("ProductType", on_delete=models.PROTECT)
     objects = ActiveQuerySet.as_manager()
 
     def __str__(self):
@@ -103,7 +103,7 @@ class ProductLine(models.Model):
         through="ProductLineAttributeValue",
         related_name="product_line_attribute_value",
     )
-    product_type = models.ForeignKey("ProductType", on_delete=models.PROTECT)
+
     objects = ActiveQuerySet.as_manager()
 
     def clean(self):

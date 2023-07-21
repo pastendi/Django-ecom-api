@@ -39,17 +39,18 @@ class ProductViewSet(viewsets.ViewSet):
         serializer = ProductSerializer(
             self.queryset.filter(slug=slug)
             .select_related("category", "brand")
-            .prefetch_related(Prefetch("product_line__product_image")),
+            .prefetch_related(Prefetch("product_line__product_image"))
+            .prefetch_related(Prefetch("product_line__attribute_value__attribute")),
             many=True,
         )
         data = Response(serializer.data)
 
         # inspect number of dababaset query
-        q = list(connection.queries)
-        print(len(q))
-        for item in q:
-            sql = format(str(item["sql"]), reindent=True)
-            print(highlight(sql, SqlLexer(), TerminalFormatter()))
+        # q = list(connection.queries)
+        # print(len(q))
+        # for item in q:
+        #     sql = format(str(item["sql"]), reindent=True)
+        #     print(highlight(sql, SqlLexer(), TerminalFormatter()))
         return data
 
     @extend_schema(responses=ProductSerializer)
