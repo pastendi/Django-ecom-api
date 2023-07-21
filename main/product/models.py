@@ -58,7 +58,7 @@ class AttributeValue(models.Model):
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, related_name="attribute")
 
     def __str__(self):
-        return f"{self.attribute}-{self.attribute_value}"
+        return f"{self.attribute.name}-{self.attribute_value}"
 
 
 class ProductLineAttributeValue(models.Model):

@@ -1,6 +1,15 @@
 import factory
 
-from main.product.models import Brand, Category, Product, ProductImage, ProductLine
+from main.product.models import (
+    Attribute,
+    AttributeValue,
+    Brand,
+    Category,
+    Product,
+    ProductImage,
+    ProductLine,
+    ProductType,
+)
 
 
 class CategoryFactory(factory.django.DjangoModelFactory):
@@ -17,6 +26,35 @@ class BrandFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: "Brand_%d" % n)
 
 
+class AttributeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Attribute
+
+    name = "attr_name"
+    description = "attr_desc"
+
+
+class AttributeValueFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = AttributeValue
+
+    attribute_value = "attr_value"
+    attribute = factory.SubFactory(AttributeFactory)
+
+
+class ProductTypeFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = ProductType
+
+    name = "test_type"
+
+    @factory.post_generation
+    def attribute(self, create, extracted, **kwargs):
+        if not create or not extracted:
+            return
+        self.attribute.add(*extracted)
+
+
 class ProductFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Product
@@ -26,6 +64,7 @@ class ProductFactory(factory.django.DjangoModelFactory):
     is_downloadable = False
     brand = factory.SubFactory(BrandFactory)
     category = factory.SubFactory(CategoryFactory)
+    product_type = factory.SubFactory(ProductTypeFactory)
     visibility = True
 
 
@@ -38,6 +77,12 @@ class ProductLineFactory(factory.django.DjangoModelFactory):
     stock = 10
     product = factory.SubFactory(ProductFactory)
     visibility = True
+
+    @factory.post_generation
+    def attribute_value(self, create, extracted, **kwargs):
+        if not create or not extracted:
+            return
+        self.attribute_value.add(*extracted)
 
 
 class ProductImageFactory(factory.django.DjangoModelFactory):

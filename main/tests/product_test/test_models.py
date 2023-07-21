@@ -35,8 +35,9 @@ class TestProductModel:
 
 
 class TestProductLineModel:
-    def test_str_method(self, product_line_factory):
-        x = product_line_factory(sku="123")
+    def test_str_method(self, product_line_factory, attribute_value_factory):
+        attr = attribute_value_factory(attribute_value="test")
+        x = product_line_factory(sku="123", attribute_value=(attr,))
         assert x.__str__() == "123"
 
     def test_duplicate_order_value(self, product_line_factory, product_factory):
@@ -50,3 +51,23 @@ class TestProductImageModel:
     def test_str_method(self, product_image_factory):
         x = product_image_factory(order=1)
         assert x.__str__() == "1"
+
+
+class TestAttributeModel:
+    def test_str_method(self, attribute_factory):
+        x = attribute_factory(name="test_attribute")
+        assert x.__str__() == "test_attribute"
+
+
+class TestAttributeValueModel:
+    def test_str_method(self, attribute_value_factory, attribute_factory):
+        attr = attribute_factory(name="test_attribute")
+        x = attribute_value_factory(attribute_value="test_value", attribute=attr)
+        assert x.__str__() == "test_attribute-test_value"
+
+
+class TestProductTypeModel:
+    def test_str_method(self, product_type_factory, attribute_factory):
+        attr = attribute_factory(name="test")
+        x = product_type_factory(name="test_type", attribute=(attr,))
+        assert x.__str__() == "test_type"
